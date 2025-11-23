@@ -11,10 +11,10 @@ const c"uint16_t" = UInt16
 const c"uint32_t" = UInt32
 const c"uint64_t" = UInt64
 c``
-#const INC_DIR = joinpath(@__DIR__, "..", "..", "deps", "include")
-#const LIB_DIR = joinpath(@__DIR__, "..", "..", "deps", "lib")  # 如果需要链接库
-const INC_DIR = joinpath(@__DIR__, "deps", "include")
-const LIB_DIR = joinpath(@__DIR__, "deps", "lib")  # 如果需要链接库
+const INC_DIR = joinpath(@__DIR__, "..", "..", "deps", "include")
+const LIB_DIR = joinpath(@__DIR__, "..", "..", "deps", "lib")  # 如果需要链接库
+#const INC_DIR = joinpath(@__DIR__, "deps", "include")
+#const LIB_DIR = joinpath(@__DIR__, "deps", "lib")  # 如果需要链接库
 c`-std=c99 -fparse-all-comments -I$(INC_DIR) -L$(LIB_DIR)`
 c"#include <stdint.h>"
 c"#include <md_def.h>"
