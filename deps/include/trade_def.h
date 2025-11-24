@@ -23,6 +23,8 @@
 #define MARKET_CFETS "CFETS";  // 外汇交易中心
 #define MARKET_SHOP "SHOP";    // 上海交易所期权
 #define MARKET_SZOP "SZOP";    // 深圳交易所期权
+#define MARKET_INE "INE";      // 能源所
+#define MARKET_GFEX "GFEX";    // 广期所
 
 // 字符字段长度定义
 #define LEN_ID (32)
@@ -213,6 +215,49 @@ typedef struct t_Order {
 } Order;
 
 /**
+ * 兼容期货的订单数据类型
+ */
+typedef struct t_FuOrder {
+  char strategy_id[LEN_ID];   // 策略id
+  char run_id[LEN_ID];        // 策略运行id，代表策略的一次运行对应的id，即回测/模拟/实盘id
+  char order_id[LEN_ID];      // 后台系统生成的内部订单id
+  char cl_order_id[LEN_ID];   // 订单的客户方id
+  char symbol[LEN_SYMBOL];    // 交易标的，格式为市场.证券ID或市场.合约ID
+
+  char account_id[LEN_ACCOUNT_ID];  // 用户资金账户id
+  int16_t account_type;             // 用户资金账户类型
+
+  int32_t date;                 // 订单创建日期，格式：YYYYMMDD
+  int32_t trade_seqno;          // 交易序号，即批次号
+  int16_t order_status;         // 订单状态，参考OrderStatus定义
+  int16_t order_type;           // 订单类型，参考OrderType定义
+  int16_t side;                 // 买/卖，参考OrderSide定义
+  int16_t credit_type;          // 信用类型，参考CreditType定义
+  int32_t volume;               // 订单数量
+  int64_t price;               // 订单委托价，扩大1万倍
+  int32_t filled_volume;        // 订单累计已完成数量
+  uint64_t filled_turnover;     // 订单累计已完成金额，扩大1万倍
+  int64_t filled_price;        // 成交均价，扩大1万倍
+  int64_t filled_market_value;  // 成交合约价值，扩大1万倍
+  int32_t margin_ratio;         // 保证金比率，扩大1万倍
+  int64_t marketdata_time;      // 触发订单的行情时间，精确到微秒，格式HHMMSSmmmuuu
+  int64_t create_time;          // 订单创建时间，精确到微秒，格式HHMMSSmmmuuu
+  int64_t update_time;          // 订单更新时间，精确到微秒，格式HHMMSSmmmuuu
+  int64_t finish_time;          // 订单完成时间，精确到微秒，格式HHMMSSmmmuuu
+
+  int16_t cancel_flag;          // 撤单标识，参考CancelFlag定义
+  int32_t cancel_volume;        // 撤单量
+  int32_t cancel_cnt;           // 撤单次数
+  int64_t order_fee;            // 费用，扩大1万倍
+  HedgeFlag hedge_flag;         // 组合投机套保标志，用于期货交易
+  char comb_id[LEN_COM_ID];     // 组合投机套保编号，用于期货交易
+  char plate[LEN_PLATE];        // 期权交易板块
+
+  int32_t err_code;               // 订单委托错误码
+  char err_msg[LEN_ERR_MSG];      // 订单委托错误消息
+} FuOrder;
+
+/**
  * 批量下单使用的订单请求类型
  */
 typedef struct t_OrderReq {
@@ -228,6 +273,23 @@ typedef struct t_OrderReq {
   char ext_info[LEN_EXT_INFO];  // 委托需要带入的扩展信息，格式为：key1=v1&key2=v2
                                 // 目前支持的key有comb_id（UFX期货组合编号），plate（期权板块）
 } OrderReq;
+
+/**
+ * 期货批量下单使用的订单请求类型
+ */
+typedef struct t_FuOrderReq {
+  char order_id[LEN_ID];        // 后台系统生成的内部订单id，接口返回时填上
+  char cl_order_id[LEN_ID];     // 订单的客户方id，异步下单时用户需要填上唯一id，以便委托响应时区分
+  char symbol[LEN_SYMBOL];      // 交易标的，格式为市场.证券ID或市场.合约ID
+
+  int16_t order_type;           // 订单类型，参考OrderType定义
+  int16_t side;                 // 买/卖，参考OrderSide定义
+  int32_t volume;               // 订单数量
+  int64_t price;               // 订单委托价，限价单使用，市价填写0，扩大1万倍
+  int16_t hedge_flag;           // 期货投机、套利、套保标志，参考HedgeFlag定义
+  char ext_info[LEN_EXT_INFO];  // 委托需要带入的扩展信息，格式为：key1=v1&key2=v2
+                                // 目前支持的key有comb_id（UFX期货组合编号），plate（期权板块）
+} FuOrderReq;
 
 /**
  * 批量下单使用的订单请求类型
@@ -273,6 +335,32 @@ typedef struct t_Trade {
 } Trade;
 
 /**
+ * 期货成交数据类型
+ */
+typedef struct t_FuTrade {
+  char strategy_id[LEN_ID];         // 策略ID
+  char run_id[LEN_ID];              // 策略运行id，代表策略的一次运行对应的id，即回测/模拟/实盘id
+  char order_id[LEN_ID];            // 后台系统生成的内部订单id
+  char cl_order_id[LEN_ID];         // 订单的客户方id
+  char symbol[LEN_SYMBOL];          // 交易标的，格式为市场.证券ID或市场.合约ID
+  char account_id[LEN_ACCOUNT_ID];  // 用户资金账户id
+  int16_t account_type;             // 用户资金账户类型
+  int32_t date;                     // 成交日期，格式：YYYYMMDD
+  int32_t trade_seqno;              // 交易序号，即批次号
+  int16_t side;                     // 买/卖，参考OrderSide定义
+  int16_t order_type;               // 订单类型，参考OrderType定义
+  int16_t exec_type;                // 成交回报类型
+  char exec_id[LEN_ID];             // 成交回报编号
+  int32_t volume;                   // 成交数量
+  int64_t price;                   // 成交价格，扩大1万倍
+  uint64_t turnover;                // 成交金额，扩大1万倍
+  int64_t market_value;             // 成交合约市值，扩大1万倍
+  int64_t order_price;             // 委托价格，扩大1万倍
+  int32_t order_volume;             // 委托数量
+  int64_t transact_time;            // 成交时间，精确到微秒，格式HHMMSSmmmuuu
+} FuTrade;
+
+/**
  * 仓位数据类型
  */
 typedef struct t_Position {
@@ -298,6 +386,33 @@ typedef struct t_Position {
   int64_t create_time;              // 初始建仓时间，精确到微秒，格式HHMMSSmmmuuu
   int64_t update_time;              // 仓位变更时间，精确到微秒，格式HHMMSSmmmuuu
 } Position;
+
+/**
+ * 期货仓位数据类型
+ */
+typedef struct t_FuPosition {
+  char strategy_id[LEN_ID];         // 策略ID
+  char run_id[LEN_ID];              // 策略运行id，代表策略的一次运行对应的id，即回测/模拟/实盘id
+  char account_id[LEN_ACCOUNT_ID];  // 用户资金账户id
+  int16_t account_type;             // 用户资金账户类型
+  char symbol[LEN_SYMBOL];          // 持仓标的，格式为市场.证券ID或市场.合约ID
+  int16_t side;                     // 持仓方向，参考PositionSide定义
+  int32_t volume;                   // 总仓量
+  int32_t avail_volume;             // 可用仓量
+  int32_t frozen_volume;            // 冻结仓量
+  int32_t today_volume;             // 今仓总量
+  int32_t today_frozen_volume;      // 今仓冻结量
+  int32_t today_avail_volume;       // 今仓可用量
+  int32_t yesterday_volume;         // 昨仓总量
+  int32_t yesterday_frozen_volume;  // 昨仓冻结量
+  int32_t yesterday_avail_volume;   // 昨仓可用量
+  int64_t avg_cost;                // 开仓均价，扩大1万倍
+  int64_t hold_cost;               // 持仓均价，扩大1万倍
+  int32_t create_day;               // 初始建仓日期，格式：YYYYMMDD
+  int32_t update_day;               // 仓位变更日期，格式：YYYYMMDD
+  int64_t create_time;              // 初始建仓时间，精确到微秒，格式HHMMSSmmmuuu
+  int64_t update_time;              // 仓位变更时间，精确到微秒，格式HHMMSSmmmuuu
+} FuPosition;
 
 /**
  * 风险收益指标数据类型
