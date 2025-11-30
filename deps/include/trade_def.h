@@ -249,7 +249,7 @@ typedef struct t_FuOrder {
   int32_t cancel_volume;        // 撤单量
   int32_t cancel_cnt;           // 撤单次数
   int64_t order_fee;            // 费用，扩大1万倍
-  HedgeFlag hedge_flag;         // 组合投机套保标志，用于期货交易
+  int32_t hedge_flag;         // 组合投机套保标志，用于期货交易
   char comb_id[LEN_COM_ID];     // 组合投机套保编号，用于期货交易
   char plate[LEN_PLATE];        // 期权交易板块
 
