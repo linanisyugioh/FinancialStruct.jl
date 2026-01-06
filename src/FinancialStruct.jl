@@ -69,11 +69,37 @@ for file in ["bar.jl", "baseinfo.jl", "fundmentals.jl", "hkdata.jl", "marketdata
     end
 end
 
-const type_tuple = (UInt8, Int16, UInt16, Int32, UInt32, Int64, UInt64, Float32, Float64, UInt8, UInt8,
- UInt8, Int32, Int32, UInt32, UInt32, Int64, Int64, UInt64, UInt64)
+#/**
+# * 数据字段类型定义。
+# */
+#enum HFieldType {
+#  HFieldType_Char = 0,                /// 字符类型，长度1字节
+#  HFieldType_Short,                   /// 短整型，长度2字节
+#  HFieldType_UShort,                  /// 无符号短整型，长度2字节
+#  HFieldType_Int,                     /// 整型，长度4字节
+#  HFieldType_UInt,                    /// 无符号整型，长度4字节
+#  HFieldType_Long,                    /// 长整型，长度8字节
+#  HFieldType_ULong,                   /// 无符号长整型，长度8字节
+#  HFieldType_Float,                   /// 单精度浮点数，长度4字节
+#  HFieldType_Double,                  /// 双精度浮点数，长度8字节
+#  HFieldType_CharArray,               /// 字符数组
+#  HFieldType_ZeroTermCharArray,       /// 以0结尾的字符数组
+#  HFieldType_SpaceTermCharArray,      /// 以空格结尾的字符数组
+#  HFieldType_IntArray,                /// 整数数组
+#  HFieldType_ZeroTermIntArray,        /// 以0结尾的整数数组
+#  HFieldType_UIntArray,               /// 无符号整数数组
+#  HFieldType_ZeroTermUIntArray,       /// 以0结尾的无符号整数数组
+#  HFieldType_LongArray,               /// 长整数数组
+#  HFieldType_ZeroTermLongArray,       /// 以0结尾的长整数数组
+#  HFieldType_ULongArray,              /// 无符号长整数数组
+#  HFieldType_ZeroTermULongArray,      /// 以0结尾的无符号长整数数组
+#};
+#type_tuple与ctype_tuple均与HFieldType中的类型一一对应
+const type_tuple = (Cchar, Int16, UInt16, Int32, UInt32, Int64, UInt64, Float32, Float64, 
+Cchar, Cchar, Cchar, Int32, Int32, UInt32, UInt32, Int64, Int64, UInt64, UInt64)
 
-const ctype_tuple = ("uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t", "int64_t", "uint64_t", "float", "double", "uint8_t", "uint8_t",
- "uint8_t", "int32_t", "int32_t", "uint32_t", "uint32_t", "int64_t", "int64_t", "uint64_t", "uint64_t")
+const ctype_tuple = ("char", "int16_t", "uint16_t", "int32_t", "uint32_t", "int64_t", "uint64_t", "float", "double",
+ "char", "char", "char", "int32_t", "int32_t", "uint32_t", "uint32_t", "int64_t", "int64_t", "uint64_t", "uint64_t")
 
 const HDB_MAX_FILE_TYPE_NUM = 64
 const HDB_MAX_DATA_FIELD_NUM = 512
@@ -85,7 +111,7 @@ const HDB_MAX_ITEMDATA_SIZE = 64 * 1024
 const HDB_MAX_CLIENT_FILE_READ_SIZE = 250 * 1024
  
 struct HDataField
-  field_name::NTuple{HDB_MAX_FIELDNANE_SIZE, UInt8}
+  field_name::NTuple{HDB_MAX_FIELDNANE_SIZE, Cchar}
   field_type::Cint
   field_op::Cint
   field_size::Cint
@@ -93,14 +119,14 @@ struct HDataField
 end
 
 struct HDataType
-  type::NTuple{HDB_MAX_TYPENANE_SIZE, UInt8}
+  type::NTuple{HDB_MAX_TYPENANE_SIZE, Cchar}
   field_count::Cint
   fields::NTuple{HDB_MAX_DATA_FIELD_NUM, HDataField}
   data_size::Cint
 end
 
 struct HDataItem
-  symbol::NTuple{HDB_MAX_SYMBOL_SIZE, UInt8}
+  symbol::NTuple{HDB_MAX_SYMBOL_SIZE, Cchar}
   index::Cint
   trading_day::Cint
   local_time::Int64
@@ -110,7 +136,7 @@ struct HDataItem
 end
 
 struct HCodeInfo
-  symbol::NTuple{HDB_MAX_SYMBOL_SIZE,UInt8}
+  symbol::NTuple{HDB_MAX_SYMBOL_SIZE,Cchar}
   index::Cint
   total_items_num::Cint
   type_items_nums::NTuple{HDB_MAX_FILE_TYPE_NUM,Cint}
