@@ -23,11 +23,11 @@ typedef struct t_SecurityTick_HDB{
    int32_t yield_to_maturity;
    uint32_t high_limited;
    uint32_t low_limited;
-   uint8_t prefix[4];
+   char prefix[4];
    int32_t syl1;
    int32_t syl2;
    int32_t sd2;
-   uint8_t trading_phase_code[8];
+   char trading_phase_code[8];
    int32_t pre_iopv;
 }SecurityTick_HDB;
 
@@ -65,7 +65,7 @@ typedef struct t_FuturesTick_HDB{
    uint32_t ask_vol[5];
    int64_t bid_price[5];
    uint32_t bid_vol[5];
-   uint8_t trading_status;
+   char trading_status;
 }FuturesTick_HDB;
 
 typedef struct t_OptionsTick_HDB{
@@ -85,8 +85,8 @@ typedef struct t_OptionsTick_HDB{
    int64_t ask_price[5];
    int64_t volume;
    int64_t turnover;
-   uint8_t trading_phase_code[8];
-   uint8_t transact_time_only[12];
+   char trading_phase_code[8];
+   char transact_time_only[12];
 }OptionsTick_HDB;
 
 typedef struct t_SHStepTrade_HDB{
@@ -98,36 +98,36 @@ typedef struct t_SHStepTrade_HDB{
    int64_t trade_money;
    int64_t trade_buy_no;
    int64_t trade_sell_no;
-   uint8_t bs_flag;
-   uint8_t res[3];
+   char bs_flag;
+   char res[3];
    int64_t biz_index;
 }SHStepTrade_HDB;
 
 typedef struct t_SZStepTrade_HDB{
    uint16_t channel_no;
    int64_t appl_seq_num;
-   uint8_t md_stream_id[3];
+   char md_stream_id[3];
    int64_t bid_appl_seq_num;
    int64_t offer_appl_seq_num;
-   uint8_t security_id[8];
-   uint8_t security_id_source[4];
+   char security_id[8];
+   char security_id_source[4];
    int64_t last_px;
    int64_t last_qty;
-   uint8_t exec_type;
+   char exec_type;
    int64_t transact_time;
 }SZStepTrade_HDB;
 
 typedef struct t_SZStepOrder_HDB{
    uint16_t channel_no;
    int64_t appl_seq_num;
-   uint8_t md_stream_id[3];
-   uint8_t security_id[8];
-   uint8_t security_id_source[4];
+   char md_stream_id[3];
+   char security_id[8];
+   char security_id_source[4];
    int64_t price;
    int64_t order_qty;
-   uint8_t side;
+   char side;
    int64_t transact_time;
-   uint8_t ord_type;
+   char ord_type;
 }SZStepOrder_HDB;
 
 typedef struct t_OrderQueueItem_HDB{
@@ -142,10 +142,10 @@ typedef struct t_OrderQueueItem_HDB{
 typedef struct t_SZOptionsTick_HDB{
    int32_t time;
    uint16_t channel_no;
-   uint8_t md_stream_id[3];
-   uint8_t security_id[8];
-   uint8_t security_id_source[4];
-   uint8_t trading_phase_code[8];
+   char md_stream_id[3];
+   char security_id[8];
+   char security_id_source[4];
+   char trading_phase_code[8];
    int64_t prev_close_px;
    int64_t num_trades;
    int64_t total_volume_trade;
@@ -171,13 +171,13 @@ typedef struct t_SHStepOrder_HDB{
    int32_t order_index;
    int32_t order_channel;
    int32_t order_time;
-   uint8_t order_type;
-   uint8_t res1[3];
+   char order_type;
+   char res1[3];
    int64_t order_no;
    int32_t order_price;
    int64_t balance;
-   uint8_t order_bs_flag;
-   uint8_t res2[3];
+   char order_bs_flag;
+   char res2[3];
    int64_t biz_index;
 }SHStepOrder_HDB;
 
@@ -190,14 +190,14 @@ typedef struct t_FPSHStepTrade_HDB{
    int64_t trade_money;
    int64_t trade_buy_no;
    int64_t trade_sell_no;
-   uint8_t bs_flag;
-   uint8_t res[3];
+   char bs_flag;
+   char res[3];
    int64_t biz_index;
 }FPSHStepTrade_HDB;
 
 typedef struct t_CodeInfo_HDB{
    int32_t sec_type;
-   uint8_t sec_name[24];
+   char sec_name[24];
    int32_t date;
    uint32_t high_limited;
    uint32_t low_limited;
@@ -208,11 +208,11 @@ typedef struct t_CodeInfo_HDB{
    uint32_t cap_change_date;
    uint32_t trade_date_in;
    uint32_t trade_date_out;
-   uint8_t is_halt;
+   char is_halt;
    uint32_t margin_unit;
    int32_t margin_ratio_param1;
    int32_t margin_ratio_param2;
-   uint8_t sec_name_ext[61];
+   char sec_name_ext[61];
 }CodeInfo_HDB;
 
 #pragma pack(pop)"

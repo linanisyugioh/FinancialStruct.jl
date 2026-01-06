@@ -69,10 +69,8 @@ for file in ["bar.jl", "baseinfo.jl", "fundmentals.jl", "hkdata.jl", "marketdata
     end
 end
 
-#/**
+#/*
 # * 数据字段类型定义。
-# */
-#enum HFieldType {
 #  HFieldType_Char = 0,                /// 字符类型，长度1字节
 #  HFieldType_Short,                   /// 短整型，长度2字节
 #  HFieldType_UShort,                  /// 无符号短整型，长度2字节
@@ -93,8 +91,9 @@ end
 #  HFieldType_ZeroTermLongArray,       /// 以0结尾的长整数数组
 #  HFieldType_ULongArray,              /// 无符号长整数数组
 #  HFieldType_ZeroTermULongArray,      /// 以0结尾的无符号长整数数组
-#};
+#*/
 #type_tuple与ctype_tuple均与HFieldType中的类型一一对应
+
 const type_tuple = (Cchar, Int16, UInt16, Int32, UInt32, Int64, UInt64, Float32, Float64, 
 Cchar, Cchar, Cchar, Int32, Int32, UInt32, UInt32, Int64, Int64, UInt64, UInt64)
 

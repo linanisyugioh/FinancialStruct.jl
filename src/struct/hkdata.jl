@@ -19,8 +19,8 @@ typedef struct t_HKSecurityTick_HDB{
 }HKSecurityTick_HDB;
 
 typedef struct t_HKIndexTick_HDB{
-   uint8_t index_code[11];
-   uint8_t index_status;
+   char index_code[11];
+   char index_status;
    int64_t index_time;
    int64_t index_value;
    int64_t net_chg_prev_day;
@@ -33,8 +33,8 @@ typedef struct t_HKIndexTick_HDB{
    int64_t previous_ses_close;
    int64_t index_volume;
    int32_t net_chg_prev_day_pct;
-   uint8_t exception;
-   uint8_t filler[3];
+   char exception;
+   char filler[3];
 }HKIndexTick_HDB;
 
 typedef struct t_HKTradeTicker_HDB{
@@ -44,52 +44,52 @@ typedef struct t_HKTradeTicker_HDB{
    uint64_t agg_quantity;
    uint64_t trade_time;
    int16_t trd_type;
-   uint8_t trd_cancel_flag;
-   uint8_t filler;
+   char trd_cancel_flag;
+   char filler;
 }HKTradeTicker_HDB;
 
 typedef struct t_HKCodeInfo_HDB{
    uint32_t security_code;
-   uint8_t market_code[4];
-   uint8_t isin_code[12];
-   uint8_t instrument_type[4];
-   uint8_t product_type;
-   uint8_t filler1;
-   uint8_t spread_table_code[2];
-   uint8_t security_short_name[40];
-   uint8_t currency_code[3];
-   uint8_t gccs_name[60];
-   uint8_t gb_name[60];
+   char market_code[4];
+   char isin_code[12];
+   char instrument_type[4];
+   char product_type;
+   char filler1;
+   char spread_table_code[2];
+   char security_short_name[40];
+   char currency_code[3];
+   char gccs_name[60];
+   char gb_name[60];
    uint32_t lot_size;
-   uint8_t filler12[4];
+   char filler12[4];
    int32_t pre_close_price;
-   uint8_t vcm_flag;
-   uint8_t short_sell_flag;
-   uint8_t cas_flag;
-   uint8_t ccas_flag;
-   uint8_t dummy_security_flag;
-   uint8_t filler2;
-   uint8_t stamp_duty_flag;
-   uint8_t filler3;
+   char vcm_flag;
+   char short_sell_flag;
+   char cas_flag;
+   char ccas_flag;
+   char dummy_security_flag;
+   char filler2;
+   char stamp_duty_flag;
+   char filler3;
    uint32_t listing_date;
    uint32_t delisting_date;
-   uint8_t free_text[38];
-   uint8_t filler4[62];
-   uint8_t pos_flag;
+   char free_text[38];
+   char filler4[62];
+   char pos_flag;
    int32_t pos_upper_limit;
    int32_t pos_lower_limit;
-   uint8_t filler5[41];
-   uint8_t efn_flag;
+   char filler5[41];
+   char efn_flag;
    uint32_t accrued_interest;
    uint32_t coupon_rate;
-   uint8_t filler6[62];
+   char filler6[62];
    uint32_t conversion_ratio;
    int32_t strike_price1;
    int32_t strike_price2;
    uint32_t maturity_date;
-   uint8_t call_put_flag;
-   uint8_t style;
-   uint8_t filler7[80];
+   char call_put_flag;
+   char style;
+   char filler7[80];
 }HKCodeInfo_HDB;
 
 #pragma pack(pop)"
