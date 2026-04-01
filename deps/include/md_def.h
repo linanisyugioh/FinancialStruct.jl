@@ -1,12 +1,12 @@
 ﻿/**
  * @file    md_def.h
  * @brief   hftsdk 行情数据结构定义
- * @Copyright (c) 2022 上海紫虚科技有限公司
  */
 
 #ifndef HFT_SDK_MD_DEF_H__
 #define HFT_SDK_MD_DEF_H__
 
+#include <cstdint>
 #include <stdint.h>
 
 #pragma pack(push, 1)
@@ -224,6 +224,42 @@ typedef struct t_CodeInfo {
   int32_t margin_ratio_param2;  // 保证金计算比例参数二	N6(2)
                                 // 保证金计算参数，单位：%
 } CodeInfo;
+
+ 
+/**
+ * 期货代码基本信息（含手续费）
+ */
+typedef struct t_FuCodeInfo {
+  char symbol[24];           // 证券代码（带交易所代码）
+  int32_t sec_type;          // 代码类型,1：股票,2:期货,3:期权
+  char sec_name[24];         // 代码中文名称，编码为utf8
+  uint32_t date;             // 日期 YYYYMMDD 
+  uint32_t high_limited;     // 涨停价，扩大10000倍
+  uint32_t low_limited;      // 跌停价，扩大10000倍
+  int32_t multiplier;        // 合约乘数, 合约乘数必为正整数
+  int32_t margin_ratio;      // 保证金比率，扩大10000倍
+  int32_t price_tick;        // 价格变更单位，扩大10000倍
+  int64_t capital;           // 流通股本数, 获取期货当天codeinfo时，表示是否支持大额单边，1支持，0不支持
+  uint32_t cap_change_date;  // 股本变动日期
+  uint32_t trade_date_in;    // 上市日期YYYYMMDD
+  uint32_t trade_date_out;   // 退市日期YYYYMMDD(最后一个交易日)
+  uint8_t is_halt;           // 是否停牌，1：停牌，0：正常交易
+
+  // 保证金
+  uint32_t margin_unit;         // 单位保证金	N16(2)，扩大10000倍
+  int32_t margin_ratio_param1;  // 保证金计算参数，单位：%, 获取期货当天codeinfo时，表示多头保证金率，扩大10000倍
+  int32_t margin_ratio_param2;  // 保证金计算参数，单位：%, 获取期货当天codeinfo时，表示空头保证金率，扩大10000倍
+
+  // 手续费, 扩大 100000 （十万倍）， 扩大十万倍的原因：适配类似于 万1.5之类的手续费                      
+  int32_t close_pre_commission_ratio;  // 平昨仓手续费比例，单位：%, 扩大 100000 （十万倍）
+  int32_t close_pre_commission;        // 平昨仓手续费	单位：元/手, 扩大 100000 （十万倍）
+
+  int32_t close_today_commission_ratio;// 平今仓手续费比例 单位：%, 扩大 100000 （十万倍）
+  int32_t close_today_commission;      // 平今仓手续费	单位：元/手, 扩大 100000 （十万倍）
+
+  int32_t open_commission_ratio;       // 开仓手续费比例 单位：%, 扩大 100000 （十万倍）
+  int32_t open_commission;             // 开仓手续费	单位：元/手, 扩大 100000 （十万倍）
+} FuCodeInfo;
 
 /**
  * 交易日期数据

@@ -1,7 +1,6 @@
 ﻿/**
  * @file    trade_def.h
  * @brief   hftsdk 交易相关数据结构定义
- * @Copyright (c) 2022 上海紫虚科技有限公司
  */
 
 #ifndef HFT_SDK_TRADE_DEF_H__
@@ -236,7 +235,7 @@ typedef struct t_FuOrder {
   int32_t volume;               // 订单数量
   int64_t price;               // 订单委托价，扩大1万倍
   int32_t filled_volume;        // 订单累计已完成数量
-  uint64_t filled_turnover;     // 订单累计已完成金额，扩大1万倍
+  uint64_t filled_turnover;     // 订单累计已完成金额，扩大1万倍, 为期货时，为累计的 成交价 * 成交手数
   int64_t filled_price;        // 成交均价，扩大1万倍
   int64_t filled_market_value;  // 成交合约价值，扩大1万倍
   int32_t margin_ratio;         // 保证金比率，扩大1万倍
@@ -353,7 +352,7 @@ typedef struct t_FuTrade {
   char exec_id[LEN_ID];             // 成交回报编号
   int32_t volume;                   // 成交数量
   int64_t price;                   // 成交价格，扩大1万倍
-  uint64_t turnover;                // 成交金额，扩大1万倍
+  uint64_t turnover;                // 成交金额，扩大1万倍，为期货时，为成交价 * 成交手数
   int64_t market_value;             // 成交合约市值，扩大1万倍
   int64_t order_price;             // 委托价格，扩大1万倍
   int32_t order_volume;             // 委托数量
