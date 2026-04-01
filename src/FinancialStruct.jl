@@ -51,6 +51,7 @@ cFuOrder      = bitstype(c"FuOrder")
 cFuOrderReq   = bitstype(c"FuOrderReq")
 cFuTrade      = bitstype(c"FuTrade")
 cFuPosition   = bitstype(c"FuPosition")
+cFuCodeInfo   = bitstype(c"FuCodeInfo")
 
 @enum HRetCode HRetCode_OK = 0 HRetCode_NotFound = -1 HRetCode_Corruption = -2 HRetCode_NotSupported = -3 HRetCode_InvalidArgument = -4 HRetCode_IOError = -5 HRetCode_Incomplete = -6 HRetCode_Full = -8 HRetCode_NotEnoughMemory = -9 HRetCode_EOF = -10 HRetCode_InvalidTime = -11 HRetCode_NetTimeout = -12 HRetCode_ConnError = -13 HRetCode_AuthError = -14 HRetCode_NetIOError = -15 HRetCode_ExceedLimit = -16
 @enum HFileAccFlag HFileAcc_ReadOnly = 0 HFileAcc_ReadWrite HFileAcc_GenerateIndexFile
