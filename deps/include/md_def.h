@@ -6,7 +6,7 @@
 #ifndef HFT_SDK_MD_DEF_H__
 #define HFT_SDK_MD_DEF_H__
 
-#include <cstdint>
+
 #include <stdint.h>
 
 #pragma pack(push, 1)

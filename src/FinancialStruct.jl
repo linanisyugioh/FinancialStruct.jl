@@ -21,6 +21,7 @@ c"#include <md_def.h>"
 c"#include <stdbool.h>"
 c"#include <tb_lib_def.h>"
 c"#include <trade_def.h>"
+c"#include <cstdint>"
 cSecurityTickData  = bitstype(c"SecurityTickData")
 cIndexTickData     = bitstype(c"IndexTickData")
 cFuturesTickData   = bitstype(c"FuturesTickData") 
