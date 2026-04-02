@@ -21,6 +21,7 @@ c"#include <md_def.h>"
 c"#include <stdbool.h>"
 c"#include <tb_lib_def.h>"
 c"#include <trade_def.h>"
+c"#include <om_data_types.h>"
 
 cSecurityTickData  = bitstype(c"SecurityTickData")
 cIndexTickData     = bitstype(c"IndexTickData")
@@ -53,6 +54,27 @@ cFuOrderReq   = bitstype(c"FuOrderReq")
 cFuTrade      = bitstype(c"FuTrade")
 cFuPosition   = bitstype(c"FuPosition")
 cFuCodeInfo   = bitstype(c"FuCodeInfo")
+
+#订单管理相关
+cOmTrade                   = bitstype(c"OmTrade")
+cOmOrder                   = bitstype(c"OmOrder")
+cContractStat              = bitstype(c"ContractStat")
+cPositionUnit              = bitstype(c"PositionUnit")
+cPositionCloseParam        = bitstype(c"PositionCloseParam")
+cPositionUnitHis           = bitstype(c"PositionUnitHis")
+cFeeCodeInfo               = bitstype(c"FeeCodeInfo")
+cFundtable                 = bitstype(c"Fundtable")
+cFundtableHis              = bitstype(c"FundtableHis")
+cAccountFundtable          = bitstype(c"AccountFundtable")
+cAccountFundtableHis       = bitstype(c"AccountFundtableHis")
+cAccountPositionUnit       = bitstype(c"AccountPositionUnit")
+cAccountPositionCloseParam = bitstype(c"AccountPositionCloseParam")
+cAccountPositionUnitHis    = bitstype(c"AccountPositionUnitHis")
+cCombinationUnit           = bitstype(c"CombinationUnit")
+cCombinationUnitHis        = bitstype(c"CombinationUnitHis")
+cAccountContractStat       = bitstype(c"AccountContractStat")
+cAccountScopePnlDelta      = bitstype(c"AccountScopePnlDelta")
+
 
 @enum HRetCode HRetCode_OK = 0 HRetCode_NotFound = -1 HRetCode_Corruption = -2 HRetCode_NotSupported = -3 HRetCode_InvalidArgument = -4 HRetCode_IOError = -5 HRetCode_Incomplete = -6 HRetCode_Full = -8 HRetCode_NotEnoughMemory = -9 HRetCode_EOF = -10 HRetCode_InvalidTime = -11 HRetCode_NetTimeout = -12 HRetCode_ConnError = -13 HRetCode_AuthError = -14 HRetCode_NetIOError = -15 HRetCode_ExceedLimit = -16
 @enum HFileAccFlag HFileAcc_ReadOnly = 0 HFileAcc_ReadWrite HFileAcc_GenerateIndexFile
