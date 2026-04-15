@@ -5,33 +5,32 @@
 #ifndef OM_DATA_TYPES_H
 #define OM_DATA_TYPES_H
 
-#include <cstdint>
 #include <stdint.h>
 
 /* ========== 长度宏定义 ========== */
-#define LEN_ID         64   /**< ID 类字段长度，含 '\0' */
-#define LEN_ACCOUNT_ID 64   /**< 账户ID长度 */
-#define LEN_ERR_MSG    128  /**< 错误信息长度 */
-#define LEN_CODE       32   /**< 标的/合约代码长度 */
-#define LEN_PRODUCT    32   /**< 品种长度 */
-#define LEN_SECURITY   64   /**< 证券名称长度 */
+#define OM_LEN_ID         64   /**< ID 类字段长度，含 '\0' */
+#define OM_LEN_ACCOUNT_ID 64   /**< 账户ID长度 */
+#define OM_LEN_ERR_MSG    128  /**< 错误信息长度 */
+#define OM_LEN_CODE       32   /**< 标的/合约代码长度 */
+#define OM_LEN_PRODUCT    32   /**< 品种长度 */
+#define OM_LEN_SECURITY   64   /**< 证券名称长度 */
 
 
 /* ========== 成交记录结构体（数据库/持久化） ========== */
 /** 成交表对应结构体，主键：order_id + trade_date + strategy_id + run_id + account_id + account_type + match_seqno */
 typedef struct t_OmTrade {
-    char    order_id[LEN_ID];           /**< 量化后台生成的ID，作为委托的唯一标识（主键） */
+    char    order_id[OM_LEN_ID];           /**< 量化后台生成的ID，作为委托的唯一标识（主键） */
     int32_t trade_date;                  /**< 成交日期（主键），对于夜盘填交易归属日 */
-    char    strategy_id[LEN_CODE];      /**< 策略ID（主键） */
-    char    run_id[LEN_ID];              /**< 实例ID（主键） */
-    char    account_id[LEN_ACCOUNT_ID]; /**< 资金账户ID（主键） */
+    char strategy_id[OM_LEN_CODE];      /**< 策略ID（主键） */
+    char run_id[OM_LEN_ID];              /**< 实例ID（主键） */
+    char account_id[OM_LEN_ACCOUNT_ID]; /**< 资金账户ID（主键） */
     int32_t account_type;                /**< 资金账户类型（主键） */
-    char    match_seqno[LEN_ID];        /**< 成交序号（主键），交易所返回的唯一标识 */
+    char match_seqno[OM_LEN_ID];        /**< 成交序号（主键），交易所返回的唯一标识 */
     int32_t match_type;                  /**< 成交回报类型，区分成交回报类型 */
-    char    code[LEN_CODE];             /**< 标的代码或合约代码 */
-    char    product[LEN_PRODUCT];       /**< 品种，期货、期权特有 */
+    char code[OM_LEN_CODE];             /**< 标的代码或合约代码 */
+    char product[OM_LEN_PRODUCT];       /**< 品种，期货、期权特有 */
     int32_t market;                      /**< 市场/交易所 */
-    char    cl_order_id[LEN_CODE];      /**< 用户自定义的order_id */
+    char    cl_order_id[OM_LEN_CODE];      /**< 用户自定义的order_id */
     int32_t side;                        /**< 买卖方向，参考 OrderSide 枚举 */
     int32_t volume;                      /**< 成交数量（手数） */
     int64_t price;                       /**< 成交价格（包含滑点），扩大一万倍 */
@@ -47,17 +46,17 @@ typedef struct t_OmTrade {
 /* ========== 订单记录结构体（数据库/持久化） ========== */
 /** 委托表对应结构体，主键：order_id + oper_date + strategy_id + run_id + account_id + account_type */
 typedef struct t_OmOrder {
-    char order_id[LEN_ID];              /**< 量化后台生成的ID，作为委托的唯一标识(主键) */
+    char order_id[OM_LEN_ID];              /**< 量化后台生成的ID，作为委托的唯一标识(主键) */
     int32_t oper_date;                  /**< 委托日期（主键），期货夜盘填交易归属日，格式YYYYMMDD */
-    char strategy_id[LEN_CODE];         /**< 策略ID（主键） */
-    char run_id[LEN_ID];                /**< 实例ID（主键） */
-    char account_id[LEN_ACCOUNT_ID];    /**< 账户ID（主键） */
+    char strategy_id[OM_LEN_CODE];         /**< 策略ID（主键） */
+    char run_id[OM_LEN_ID];                /**< 实例ID（主键） */
+    char account_id[OM_LEN_ACCOUNT_ID];    /**< 账户ID（主键） */
     int32_t account_type;               /**< 账户类型（主键） */
-    char cl_order_id[LEN_CODE];        /**< 客户自定义的order_id */
+    char cl_order_id[OM_LEN_CODE];        /**< 客户自定义的order_id */
     int32_t date;                       /**< 实际委托日期，真实时间 */
     int32_t market;                     /**< 标的物市场，例如：CZE, SHFE等 */
-    char code[LEN_CODE];                 /**< 标的代码或合约代码 ，例如：SHFE.ag1905, SHFE.au1905*/
-    char product[LEN_PRODUCT];          /**< 品种，期货期权特有，例如：ag，au */
+    char code[OM_LEN_CODE];                 /**< 标的代码或合约代码 ，例如：SHFE.ag1905, SHFE.au1905*/
+    char product[OM_LEN_PRODUCT];          /**< 品种，期货期权特有，例如：ag，au */
     int32_t status;                     /**< 订单状态（枚举变量） */
     int32_t order_type;                 /**< 订单类型（枚举变量） */
     int32_t side;                       /**< 买卖方向（枚举变量），期货申请组合/拆分新增39、40 */
@@ -76,9 +75,9 @@ typedef struct t_OmOrder {
     int64_t create_time;                /**< 订单创建时间，精确到毫秒，格式HHmmSSsss */
     int64_t update_time;                /**< 订单创建时间，精确到毫秒，格式HHmmSSsss */
     int64_t finish_time;                /**< 订单创建时间，精确到毫秒，格式HHmmSSsss */
-    char security[LEN_SECURITY];        /**< 证券名称 */
+    char security[OM_LEN_SECURITY];        /**< 证券名称 */
     int32_t err_code;                   /**< 订单错误码 */
-    char err_msg[LEN_ERR_MSG];          /**< 订单错误原因 */
+    char err_msg[OM_LEN_ERR_MSG];          /**< 订单错误原因 */
 } OmOrder;
 
 /** 合约级别的持仓统计，用于快速查询持仓量/冻结量而无需遍历 position_unit 表。
@@ -86,11 +85,11 @@ typedef struct t_OmOrder {
  *  以支持不同交易所的平仓规则（上期所/能源所需区分平今/平昨，其他交易所无需区分）
  */
 typedef struct t_ContractStat {
-    char run_id[LEN_ID];               /**< 实例ID（作用域） */
-    char account_id[LEN_ACCOUNT_ID];   /**< 账户ID（作用域） */
+    char run_id[OM_LEN_ID];               /**< 实例ID（作用域） */
+    char account_id[OM_LEN_ACCOUNT_ID];   /**< 账户ID（作用域） */
     int32_t account_type;              /**< 账户类型（作用域） */
-    char strategy_id[LEN_CODE];        /**< 策略ID（作用域） */
-    char code[LEN_CODE];               /**< 合约代码 */
+    char strategy_id[OM_LEN_CODE];        /**< 策略ID（作用域） */
+    char code[OM_LEN_CODE];               /**< 合约代码 */
 
     /* 多头持仓 */
     int32_t today_long_volume;         /**< 今仓多头持仓量（手数） */
@@ -109,18 +108,18 @@ typedef struct t_ContractStat {
 /** 每手一条，用于今/昨、多/空四条队列；持久化时带 scope（run_id 等）；开仓时平仓相关填 0/空，平仓后可回填；id 与表主键一致，插入时填 0 由 DB 自增，查询/更新时使用 */
 typedef struct t_PositionUnit {
     int64_t id;                   /**< 主键，与 position_unit 表 id 一致；插入时 0，batchAdd 后回填 */
-    char run_id[LEN_ID];                /**< 实例ID（主键） */
-    char account_id[LEN_ACCOUNT_ID];    /**< 资金账户ID（主键） */
+    char run_id[OM_LEN_ID];                /**< 实例ID（主键） */
+    char account_id[OM_LEN_ACCOUNT_ID];    /**< 资金账户ID（主键） */
     int32_t account_type;               /**< 资金账户类型（主键） */
-    char strategy_id[LEN_CODE];         /**< 策略ID（主键） */
-    char code[LEN_CODE];                /**< 合约代码，开仓时从 Order.code 冗余写入，用于按合约查询持仓 */
-    char  order_id[LEN_ID];       /**< 开仓委托 ID */
+    char strategy_id[OM_LEN_CODE];         /**< 策略ID（主键） */
+    char code[OM_LEN_CODE];                /**< 合约代码，开仓时从 Order.code 冗余写入，用于按合约查询持仓 */
+    char  order_id[OM_LEN_ID];       /**< 开仓委托 ID */
     int32_t direction;           /**< 持仓方向，取 PositionSide 枚举值 */
     int64_t hold_cost;           /**< 持仓价格，扩大一万倍；开仓时为成交价，每日结算时更新为当日结算价；平仓实现盈亏用 hold_cost 与 close_price 计算 */
     int32_t open_date;           /**< 开仓日期 YYYYMMDD，区分今/昨 */
     int32_t open_time;           /**< 开仓时间 HHmmSSsss(毫秒) */
     int64_t open_price;          /**< 开仓价格，扩大一万倍，开仓后不变 */
-    char  close_order_id[LEN_ID]; /**< 平仓委托 ID，未平仓为空 */
+    char  close_order_id[OM_LEN_ID]; /**< 平仓委托 ID，未平仓为空 */
     int64_t close_price;         /**< 平仓价，扩大一万倍 */
     int32_t close_date;          /**< 平仓日期 YYYYMMDD */
     int32_t close_time;          /**< 平仓时间 HHmmSSsss(毫秒) */
@@ -145,18 +144,18 @@ typedef struct t_PositionCloseParam {
 typedef struct t_PositionUnitHis {
     int64_t id;                         /**< 主键，自增，表示平仓顺序 */
     int64_t open_id;                    /**< 关联原 PositionUnit.id */
-    char run_id[LEN_ID];                /**< 实例ID */
-    char account_id[LEN_ACCOUNT_ID];    /**< 资金账户ID */
+    char run_id[OM_LEN_ID];                /**< 实例ID */
+    char account_id[OM_LEN_ACCOUNT_ID];    /**< 资金账户ID */
     int32_t account_type;               /**< 资金账户类型 */
-    char strategy_id[LEN_CODE];         /**< 策略ID */
-    char code[LEN_CODE];                /**< 合约代码 */
-    char order_id[LEN_ID];              /**< 开仓委托 ID */
+    char strategy_id[OM_LEN_CODE];         /**< 策略ID */
+    char code[OM_LEN_CODE];                /**< 合约代码 */
+    char order_id[OM_LEN_ID];              /**< 开仓委托 ID */
     int32_t direction;                  /**< 持仓方向，取 PositionSide 枚举值 */
     int64_t hold_cost;                  /**< 持仓价格，扩大一万倍 */
     int32_t open_date;                  /**< 开仓日期 YYYYMMDD */
     int32_t open_time;                  /**< 开仓时间 HHmmSSsss(毫秒) */
     int64_t open_price;                 /**< 开仓价格，扩大一万倍 */
-    char close_order_id[LEN_ID];        /**< 平仓委托 ID */
+    char close_order_id[OM_LEN_ID];        /**< 平仓委托 ID */
     int64_t close_price;                /**< 平仓价，扩大一万倍 */
     int32_t close_date;                 /**< 平仓日期 YYYYMMDD */
     int32_t close_time;                 /**< 平仓时间 HHmmSSsss(毫秒) */
@@ -170,7 +169,7 @@ typedef struct t_PositionUnitHis {
 /* ========== 费率模块：合并结构体（手续费率 + 合约/保证金参数） ========== */
 /** 一个 code 一条记录，一次查询取齐费率与保证金，避免查两次；仅内存存储，不持久化；C 风格 */
 typedef struct t_FeeCodeInfo {
-    char code[LEN_CODE];                /**< 合约代码，唯一标识，以 NUL 结尾 */
+    char code[OM_LEN_CODE];                /**< 合约代码，唯一标识，以 NUL 结尾 */
 
     /* 手续费率（原 Fee），扩大十万倍（×100000）存储，计算后除回十万倍 */
     int32_t fee_type;                   /**< 费用类型：1=RatioByMoney，2=RatioByVolume */
@@ -193,10 +192,10 @@ typedef struct t_FeeCodeInfo {
 /* ========== 资金表记录结构体（数据库/持久化） ========== */
 /** 资金表对应结构体，主键：run_id + account_id + account_type + strategy_id；用于实时记录资金变化 */
 typedef struct t_Fundtable {
-    char run_id[LEN_ID];                /**< 实例ID（主键） */
-    char account_id[LEN_ACCOUNT_ID];    /**< 资金账户ID（主键） */
+    char run_id[OM_LEN_ID];                /**< 实例ID（主键） */
+    char account_id[OM_LEN_ACCOUNT_ID];    /**< 资金账户ID（主键） */
     int32_t account_type;               /**< 资金账户类型（主键） */
-    char strategy_id[LEN_CODE];         /**< 策略ID（主键） */
+    char strategy_id[OM_LEN_CODE];         /**< 策略ID（主键） */
     int32_t currency;                   /**< 货币类型 */
     int64_t frozen_cash;                /**< 策略的冻结资金（扩大一万倍）。现货：持仓市值+委托冻结；期货：浮动盈利/亏损+委托冻结 */
     int64_t margin;                     /**< 策略保证金（扩大一万倍） */
@@ -212,10 +211,10 @@ typedef struct t_Fundtable {
 
 /* ========== 资金表历史快照记录结构体（数据库/持久化） ========== */
 typedef struct t_FundtableHis {
-    char run_id[LEN_ID];                /**< 实例ID（主键） */
-    char account_id[LEN_ACCOUNT_ID];    /**< 资金账户ID（主键） */
+    char run_id[OM_LEN_ID];                /**< 实例ID（主键） */
+    char account_id[OM_LEN_ACCOUNT_ID];    /**< 资金账户ID（主键） */
     int32_t account_type;               /**< 资金账户类型（主键） */
-    char strategy_id[LEN_CODE];         /**< 策略ID（主键） */
+    char strategy_id[OM_LEN_CODE];         /**< 策略ID（主键） */
     int32_t oper_date;                  /**< 委托日期（主键），期货夜盘填交易归属日，格式YYYYMMDD */
     int32_t currency;                   /**< 货币类型 */
     int64_t frozen_cash;                /**< 策略的冻结资金（扩大一万倍）。现货：持仓市值+委托冻结；期货：浮动盈利/亏损+委托冻结 */
@@ -232,8 +231,8 @@ typedef struct t_FundtableHis {
 
 /* ========== 账户资金表记录结构体 ========== */
 typedef struct t_AccountFundtable {
-    char run_id[LEN_ID];                /**< 实例ID（主键） */
-    char account_id[LEN_ACCOUNT_ID];   /**< 资金账户ID（主键） */
+    char run_id[OM_LEN_ID];                /**< 实例ID（主键） */
+    char account_id[OM_LEN_ACCOUNT_ID];   /**< 资金账户ID（主键） */
     int32_t account_type;               /**< 资金账户类型（主键） */
     int32_t currency;                   /**< 货币类型 */
     int64_t account_frozen;             /**< 策略的冻结资金（扩大一万倍）。现货：持仓市值+委托冻结；期货：浮动盈利/亏损+委托冻结 */
@@ -252,8 +251,8 @@ typedef struct t_AccountFundtable {
 
 /* ========== 账户资金表历史快照记录结构体 ========== */
 typedef struct t_AccountFundtableHis {
-    char run_id[LEN_ID];                /**< 实例ID（主键） */
-    char account_id[LEN_ACCOUNT_ID];   /**< 资金账户ID（主键） */
+    char run_id[OM_LEN_ID];                /**< 实例ID（主键） */
+    char account_id[OM_LEN_ACCOUNT_ID];   /**< 资金账户ID（主键） */
     int32_t account_type;               /**< 资金账户类型（主键） */
     int32_t oper_date;                  /**< 委托日期（主键），期货夜盘填交易归属日，格式YYYYMMDD */
     int32_t currency;                   /**< 货币类型 */
@@ -276,17 +275,17 @@ typedef struct t_AccountFundtableHis {
  */
 typedef struct t_AccountPositionUnit {
     int64_t id;                         /**< 主键，与 account_position_unit 表 id 一致；插入时 0，batchAdd 后回填 */
-    char run_id[LEN_ID];                /**< 实例ID */
-    char account_id[LEN_ACCOUNT_ID];    /**< 资金账户ID */
+    char run_id[OM_LEN_ID];                /**< 实例ID */
+    char account_id[OM_LEN_ACCOUNT_ID];    /**< 资金账户ID */
     int32_t account_type;               /**< 资金账户类型 */
-    char code[LEN_CODE];                /**< 合约代码，开仓时从 Order.code 冗余写入，用于按合约查询持仓 */
-    char order_id[LEN_ID];              /**< 开仓委托 ID */
+    char code[OM_LEN_CODE];                /**< 合约代码，开仓时从 Order.code 冗余写入，用于按合约查询持仓 */
+    char order_id[OM_LEN_ID];              /**< 开仓委托 ID */
     int32_t direction;                  /**< 持仓方向，取 PositionSide 枚举值 */
     int64_t hold_cost;                  /**< 持仓价格，扩大一万倍；开仓时为成交价，每日结算时更新为当日结算价；平仓实现盈亏用 hold_cost 与 close_price 计算 */
     int32_t open_date;                  /**< 开仓日期 YYYYMMDD，区分今/昨 */
     int32_t open_time;                  /**< 开仓时间 HHmmSSsss(毫秒) */
     int64_t open_price;                 /**< 开仓价格，扩大一万倍，开仓后不变 */
-    char close_order_id[LEN_ID];        /**< 平仓委托 ID，未平仓为空 */
+    char close_order_id[OM_LEN_ID];        /**< 平仓委托 ID，未平仓为空 */
     int64_t close_price;                /**< 平仓价，扩大一万倍 */
     int32_t close_date;                 /**< 平仓日期 YYYYMMDD */
     int32_t close_time;                 /**< 平仓时间 HHmmSSsss(毫秒) */
@@ -312,17 +311,17 @@ typedef struct t_AccountPositionCloseParam {
 typedef struct t_AccountPositionUnitHis {
     int64_t id;                         /**< 主键，自增，表示平仓顺序 */
     int64_t open_id;                    /**< 关联原 AccountPositionUnit.id */
-    char run_id[LEN_ID];                /**< 实例ID */
-    char account_id[LEN_ACCOUNT_ID];    /**< 资金账户ID */
+    char run_id[OM_LEN_ID];                /**< 实例ID */
+    char account_id[OM_LEN_ACCOUNT_ID];    /**< 资金账户ID */
     int32_t account_type;               /**< 资金账户类型 */
-    char code[LEN_CODE];                /**< 合约代码 */
-    char order_id[LEN_ID];              /**< 开仓委托 ID */
+    char code[OM_LEN_CODE];                /**< 合约代码 */
+    char order_id[OM_LEN_ID];              /**< 开仓委托 ID */
     int32_t direction;                  /**< 持仓方向，取 PositionSide 枚举值 */
     int64_t hold_cost;                  /**< 持仓价格，扩大一万倍 */
     int32_t open_date;                  /**< 开仓日期 YYYYMMDD */
     int32_t open_time;                  /**< 开仓时间 HHmmSSsss(毫秒) */
     int64_t open_price;                 /**< 开仓价格，扩大一万倍 */
-    char close_order_id[LEN_ID];        /**< 平仓委托 ID */
+    char close_order_id[OM_LEN_ID];        /**< 平仓委托 ID */
     int64_t close_price;                /**< 平仓价，扩大一万倍 */
     int32_t close_date;                 /**< 平仓日期 YYYYMMDD */
     int32_t close_time;                 /**< 平仓时间 HHmmSSsss(毫秒) */
@@ -336,11 +335,11 @@ typedef struct t_AccountPositionUnitHis {
 /** 组合持仓单元，用于组合持仓的查询和统计，组合只在账户级拥有 */
 typedef struct t_CombinationUnit {
     int64_t id;                         /**< 主键. 组合ID，与 combination_unit 表 id 一致；插入时 0，batchAdd 后回填 */
-    char run_id[LEN_ID];                /**< 实例ID（主键） */
-    char account_id[LEN_ACCOUNT_ID];    /**< 资金账户ID（主键） */
+    char run_id[OM_LEN_ID];                /**< 实例ID（主键） */
+    char account_id[OM_LEN_ACCOUNT_ID];    /**< 资金账户ID（主键） */
     int32_t account_type;               /**< 资金账户类型（主键） */
-    char order_id[LEN_ID];              /**< 组合委托ID*/
-    char code[LEN_CODE];                /**< 组合合约代码 */
+    char order_id[OM_LEN_ID];              /**< 组合委托ID*/
+    char code[OM_LEN_CODE];                /**< 组合合约代码 */
     int32_t side;                       /**< 组合方向，1=多头，2=空头，参考 PositionSide 枚举 */
     int64_t position_unit_id_a;         /**< 持仓单元A，即第一腿 ID */
     int64_t position_unit_id_b;         /**< 持仓单元B，即第二腿 ID */
@@ -357,11 +356,11 @@ typedef struct t_CombinationUnit {
 typedef struct t_CombinationUnitHis {
     int64_t id;                         /**< 主键，自增 */
     int64_t combination_id;             /**< 原组合ID，对应CombinationUnit.id */
-    char run_id[LEN_ID];                /**< 实例ID */
-    char account_id[LEN_ACCOUNT_ID];    /**< 资金账户ID */
+    char run_id[OM_LEN_ID];                /**< 实例ID */
+    char account_id[OM_LEN_ACCOUNT_ID];    /**< 资金账户ID */
     int32_t account_type;               /**< 资金账户类型 */
-    char order_id[LEN_ID];              /**< 组合委托ID */
-    char code[LEN_CODE];                /**< 组合合约代码 */
+    char order_id[OM_LEN_ID];              /**< 组合委托ID */
+    char code[OM_LEN_CODE];                /**< 组合合约代码 */
     int32_t side;                       /**< 组合方向，1=多头，2=空头 */
     int64_t position_unit_id_a;         /**< 持仓单元A ID */
     int64_t position_unit_id_b;         /**< 持仓单元B ID */
@@ -379,10 +378,10 @@ typedef struct t_CombinationUnitHis {
  *  与 ContractStat 结构一致，但无 strategy_id 字段（账户级跨策略汇总）
  */
 typedef struct t_AccountContractStat {
-    char run_id[LEN_ID];                /**< 实例ID（作用域） */
-    char account_id[LEN_ACCOUNT_ID];    /**< 账户ID（作用域） */
+    char run_id[OM_LEN_ID];                /**< 实例ID（作用域） */
+    char account_id[OM_LEN_ACCOUNT_ID];    /**< 账户ID（作用域） */
     int32_t account_type;               /**< 账户类型（作用域） */
-    char code[LEN_CODE];                /**< 合约代码 */
+    char code[OM_LEN_CODE];                /**< 合约代码 */
 
     /* 多头持仓 */
     int32_t today_long_volume;          /**< 今仓多头持仓量（手数） */
@@ -402,8 +401,8 @@ typedef struct t_AccountContractStat {
  *  多空方向合并计算后写入同一 AccountFundtable，故不区分 direction。
  */
 typedef struct t_AccountScopePnlDelta {
-    char    run_id[LEN_ID];
-    char    account_id[LEN_ACCOUNT_ID];
+    char    run_id[OM_LEN_ID];
+    char    account_id[OM_LEN_ACCOUNT_ID];
     int32_t account_type;
     int64_t delta_pnl;                  /**< 本次浮盈变化量（多空合计，×10000）= Σ新pnl − Σ旧pnl */
 } AccountScopePnlDelta;
@@ -415,7 +414,7 @@ typedef struct t_AccountScopePnlDelta {
  * 不区分昨今仓，只记录每个标的的多空净持仓
  */
 typedef struct t_ExternalPosition {
-    char code[LEN_CODE];        /**< 合约代码 */
+    char code[OM_LEN_CODE];        /**< 合约代码 */
     int32_t long_volume;        /**< 多头持仓数量（正数） */
     int32_t short_volume;       /**< 空头持仓数量（正数） */
 } ExternalPosition;
