@@ -127,6 +127,7 @@ typedef struct t_PositionUnit {
     int64_t margin;              /**< 保证金（扩大一万倍）：开仓当天初始值为开仓时计算的保证金；每日结算时用结算价重算 */
     int64_t pnl;                 /**< 盈亏扩大一万倍：未平仓(close_date=0)为浮动盈亏，已平仓为平仓盈亏 */
     int32_t contract_multiply;   /**< 合约乘数，开仓时写入，之后不变 */
+    int32_t hedge_flag;          /**< 投机套保标识，1=投机/2=套保/3=套利，开仓时从 OmOrder 复制 */
 } PositionUnit;
 
 /* ========== 批量平仓参数结构体 ========== */
@@ -163,6 +164,7 @@ typedef struct t_PositionUnitHis {
     int64_t margin;                     /**< 保证金（扩大一万倍） */
     int64_t pnl;                        /**< 平仓盈亏（扩大一万倍） */
     int32_t contract_multiply;          /**< 合约乘数 */
+    int32_t hedge_flag;                /**< 投机套保标识 */
 } PositionUnitHis;
 
 
@@ -293,6 +295,7 @@ typedef struct t_AccountPositionUnit {
     int64_t margin;                     /**< 保证金（扩大一万倍）：开仓当天初始值为开仓时计算的保证金；每日结算时用结算价重算 */
     int64_t pnl;                        /**< 盈亏扩大一万倍：未平仓(close_date=0)为浮动盈亏，已平仓为平仓盈亏 */
     int32_t contract_multiply;          /**< 合约乘数，开仓时写入，之后不变 */
+    int32_t hedge_flag;                /**< 投机套保标识，1=投机/2=套保/3=套利，开仓时从 OmOrder 复制 */
     int64_t combination_id;             /**< 组合ID，0表示未参与组合；非0表示来自组合委托拆腿或保证金优惠申请，值为关联 CombinationUnit.id */
 } AccountPositionUnit;
 
@@ -329,6 +332,7 @@ typedef struct t_AccountPositionUnitHis {
     int64_t margin;                     /**< 保证金（扩大一万倍） */
     int64_t pnl;                        /**< 平仓盈亏（扩大一万倍） */
     int32_t contract_multiply;          /**< 合约乘数 */
+    int32_t hedge_flag;                /**< 投机套保标识 */
     int64_t combination_id;             /**< 组合ID，0表示未参与组合 */
 } AccountPositionUnitHis;
 
