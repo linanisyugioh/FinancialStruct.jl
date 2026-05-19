@@ -254,6 +254,7 @@ typedef struct t_FuOrder {
 
   int32_t err_code;               // 订单委托错误码
   char err_msg[LEN_ERR_MSG];      // 订单委托错误消息
+  int32_t oper_date;              // 归属交易日
 } FuOrder;
 
 /**
@@ -357,6 +358,7 @@ typedef struct t_FuTrade {
   int64_t order_price;             // 委托价格，扩大1万倍
   int32_t order_volume;             // 委托数量
   int64_t transact_time;            // 成交时间，精确到微秒，格式HHMMSSmmmuuu
+  int32_t oper_date;                // 归属交易日
 } FuTrade;
 
 /**
