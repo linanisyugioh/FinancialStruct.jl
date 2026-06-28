@@ -362,6 +362,40 @@ typedef struct t_FuTrade {
 } FuTrade;
 
 /**
+ * 组合申请请求类型（期货组合/拆分）
+ */
+typedef struct t_CombActionReq {
+  char action_id[LEN_ID];      // 框架生成的内部组合申请id，接口返回时填上
+  char symbol[LEN_SYMBOL];     // 组合合约，格式为"市场.组合合约ID"
+  int16_t comb_direction;      // 组合方向，参考CombDirection定义
+  int16_t side;                // 买/卖方向，参考OrderSide定义
+  int32_t volume;              // 组合手数
+  int16_t hedge_flag;          // 投机/套保/套利，参考HedgeFlag定义
+  char ext_info[LEN_EXT_INFO]; // 扩展信息，格式为key1=v1&key2=v2，预留
+} CombActionReq;
+
+/**
+ * 组合申请回报类型（受理回报与错误回报共用，err_code 非0表示错误回报）
+ */
+typedef struct t_CombAction {
+  char strategy_id[LEN_ID];         // 策略id
+  char run_id[LEN_ID];              // 策略运行id
+  char action_id[LEN_ID];           // 框架生成的内部组合申请id
+  char symbol[LEN_SYMBOL];          // 组合合约，格式为"市场.组合合约ID"
+  char account_id[LEN_ACCOUNT_ID];  // 用户资金账户id
+  int16_t account_type;             // 用户资金账户类型
+  int16_t comb_direction;           // 组合方向，参考CombDirection定义
+  int16_t side;                     // 买/卖方向，参考OrderSide定义
+  int32_t volume;                   // 组合手数
+  int16_t action_status;            // 组合申请状态，参考CombActionStatus定义
+  int32_t err_code;                 // 0=成功/受理，非0=错误回报
+  char err_msg[LEN_ERR_MSG];        // 错误信息
+  int32_t date;                     // 日期，格式：YYYYMMDD
+  int32_t oper_date;                // 归属交易日
+  int64_t update_time;              // 更新时间，精确到微秒，格式HHMMSSmmmuuu
+} CombAction;
+
+/**
  * 仓位数据类型
  */
 typedef struct t_Position {

@@ -22,6 +22,8 @@ c"#include <stdbool.h>"
 c"#include <tb_lib_def.h>"
 c"#include <trade_def.h>"
 c"#include <om_data_types.h>"
+c"#include <ThostFtdcUserApiDataType.h>"
+c"#include <ThostFtdcUserApiStruct.h>"
 
 cSecurityTickData  = bitstype(c"SecurityTickData")
 cIndexTickData     = bitstype(c"IndexTickData")
@@ -75,6 +77,47 @@ cCombinationUnitHis        = bitstype(c"CombinationUnitHis")
 cAccountContractStat       = bitstype(c"AccountContractStat")
 cAccountScopePnlDelta      = bitstype(c"AccountScopePnlDelta")
 cExternalPosition          = bitstype(c"ExternalPosition")
+
+
+#上期 CTP 接口结构体（ThostFtdcUserApiStruct.h）
+#命名约定：cCtp + 去掉 "CThostFtdc" 前缀与 "Field" 后缀
+#         CThostFtdcReqUserLoginField -> cCtpReqUserLogin
+#         CTP struct 共 386 个，下面只列出量化最常用的核心子集，
+#         其余按需自行 cCtpXxx = bitstype(c"struct CThostFtdcXxxField") 添加
+cCtpRspInfo                       = bitstype(c"struct CThostFtdcRspInfoField")
+cCtpReqUserLogin                  = bitstype(c"struct CThostFtdcReqUserLoginField")
+cCtpRspUserLogin                  = bitstype(c"struct CThostFtdcRspUserLoginField")
+cCtpUserLogout                    = bitstype(c"struct CThostFtdcUserLogoutField")
+cCtpReqAuthenticate               = bitstype(c"struct CThostFtdcReqAuthenticateField")
+cCtpRspAuthenticate               = bitstype(c"struct CThostFtdcRspAuthenticateField")
+cCtpUserPasswordUpdate            = bitstype(c"struct CThostFtdcUserPasswordUpdateField")
+cCtpSettlementInfo                = bitstype(c"struct CThostFtdcSettlementInfoField")
+cCtpSettlementInfoConfirm         = bitstype(c"struct CThostFtdcSettlementInfoConfirmField")
+cCtpInputOrder                    = bitstype(c"struct CThostFtdcInputOrderField")
+cCtpInputOrderAction              = bitstype(c"struct CThostFtdcInputOrderActionField")
+cCtpOrder                         = bitstype(c"struct CThostFtdcOrderField")
+cCtpOrderAction                   = bitstype(c"struct CThostFtdcOrderActionField")
+cCtpTrade                         = bitstype(c"struct CThostFtdcTradeField")
+cCtpInvestor                      = bitstype(c"struct CThostFtdcInvestorField")
+cCtpInvestorPosition              = bitstype(c"struct CThostFtdcInvestorPositionField")
+cCtpInvestorPositionDetail        = bitstype(c"struct CThostFtdcInvestorPositionDetailField")
+cCtpInvestorPositionCombineDetail = bitstype(c"struct CThostFtdcInvestorPositionCombineDetailField")
+cCtpTradingAccount                = bitstype(c"struct CThostFtdcTradingAccountField")
+cCtpInstrument                    = bitstype(c"struct CThostFtdcInstrumentField")
+cCtpDepthMarketData               = bitstype(c"struct CThostFtdcDepthMarketDataField")
+cCtpSpecificInstrument            = bitstype(c"struct CThostFtdcSpecificInstrumentField")
+#常用 Qry 请求
+cCtpQryOrder                      = bitstype(c"struct CThostFtdcQryOrderField")
+cCtpQryTrade                      = bitstype(c"struct CThostFtdcQryTradeField")
+cCtpQryInvestorPosition           = bitstype(c"struct CThostFtdcQryInvestorPositionField")
+cCtpQryInvestorPositionDetail     = bitstype(c"struct CThostFtdcQryInvestorPositionDetailField")
+cCtpQryTradingAccount             = bitstype(c"struct CThostFtdcQryTradingAccountField")
+cCtpQryInvestor                   = bitstype(c"struct CThostFtdcQryInvestorField")
+cCtpQryInstrument                 = bitstype(c"struct CThostFtdcQryInstrumentField")
+cCtpQryDepthMarketData            = bitstype(c"struct CThostFtdcQryDepthMarketDataField")
+cCtpQrySettlementInfo             = bitstype(c"struct CThostFtdcQrySettlementInfoField")
+cCtpQryInstrumentMarginRate       = bitstype(c"struct CThostFtdcQryInstrumentMarginRateField")
+cCtpQryInstrumentCommissionRate   = bitstype(c"struct CThostFtdcQryInstrumentCommissionRateField")
 
 
 @enum HRetCode HRetCode_OK = 0 HRetCode_NotFound = -1 HRetCode_Corruption = -2 HRetCode_NotSupported = -3 HRetCode_InvalidArgument = -4 HRetCode_IOError = -5 HRetCode_Incomplete = -6 HRetCode_Full = -8 HRetCode_NotEnoughMemory = -9 HRetCode_EOF = -10 HRetCode_InvalidTime = -11 HRetCode_NetTimeout = -12 HRetCode_ConnError = -13 HRetCode_AuthError = -14 HRetCode_NetIOError = -15 HRetCode_ExceedLimit = -16
