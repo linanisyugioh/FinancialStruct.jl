@@ -1288,14 +1288,20 @@ req = FinancialStruct.cCtpReqUserLogin(
 - `cCtpTransferHeader` / `cCtpTransferBankToFutureReq` / `cCtpTransferFutureToBankReq`
 
 **风控/限额 / 组合/期权**
-- `cCtpRiskNotifyField` — 风控告警（如有）
+- `cCtpRiskSettleInvstPosition` / `cCtpRiskSettleProductStatus` — 风险结算持仓 / 产品状态
+- `cCtpQryRiskSettleInvstPosition` / `cCtpQryRiskSettleProductStatus` — 上述对应的查询
 - `cCtpInputOptionSelfClose` / `cCtpInputCombAction` — 期权自对冲 / 组合申请
 - `cCtpInputExecOrder` / `cCtpInputExecOrderAction` — 行权 / 撤行权
 
 **Sync 同步类**（私有流恢复，结尾 `SyncDelta*` / `Sync*`）
-- `cCtpSyncDeltaInvestor` / `cCtpSyncDeltaInvestorPosition` / `cCtpSyncDeltaTradingAccount`
-- `cCtpSyncDeltaInstrumentMarginRate` / `cCtpSyncDeltaInstrumentCommissionRate`
-- `cCtpSyncDeltaDepthMarketData` / `cCtpSyncDeltaEWarrantOffset`
+- `cCtpSyncDeltaTradingAccount` — 资金账户同步
+- `cCtpSyncDeltaInvstMarginRate` / `cCtpSyncDeltaInvstCommRate` — 投资者保证金率 / 手续费率
+- `cCtpSyncDeltaInvstPosDtl` / `cCtpSyncDeltaInvstPosCombDtl` — 持仓明细 / 组合持仓明细
+- `cCtpSyncDeltaInitInvstMargin` — 投资者初始保证金
+- `cCtpSyncDeltaExchMarginRate` / `cCtpSyncDeltaOptExchMargin` / `cCtpSyncDeltaOptInvstMargin` — 交易所/期权保证金
+- `cCtpSyncDeltaDceCombInstrument` — 大商所组合合约
+- `cCtpSyncDeltaDepthMarketData` / `cCtpSyncDeltaIndexPrice` / `cCtpSyncDeltaEWarrantOffset`
+- `cCtpSyncDeltaProductExchRate` / `cCtpSyncDeltaProductStatus` / `cCtpSyncDeltaInfo`
 
 > CTP 共 386 个结构体覆盖会话、报单、撤单、查询、银期转账、组合申请、期权行权、风控、行情、同步流等所有交互场景；上面仅列出量化业务的高频代表。访问任意一个都可以直接 `FinancialStruct.cCtpXxx` —— 别名已全部预生成。
 
