@@ -128,6 +128,9 @@ typedef struct t_PositionUnit {
     int64_t pnl;                 /**< 盈亏扩大一万倍：未平仓(close_date=0)为浮动盈亏，已平仓为平仓盈亏 */
     int32_t contract_multiply;   /**< 合约乘数，开仓时写入，之后不变 */
     int32_t hedge_flag;          /**< 投机套保标识，1=投机/2=套保/3=套利，开仓时从 OmOrder 复制 */
+    int64_t worst_price;         /**< 持仓期间最差价格（扩大一万倍）：多头为最低价，空头为最高价；仅未平仓时更新，已平仓沿用最后一次值 */
+    int64_t last_price;          /**< 最后行情价（扩大一万倍）：仅未平仓时更新，已平仓保留当时值 */
+    int32_t frozen;              /**< 是否被平仓委托冻结：0=未冻结，1=冻结；仅未平仓行有意义，冻结的恒为该桶 FIFO 优先级最高的前 K 手 */
 } PositionUnit;
 
 /* ========== 批量平仓参数结构体 ========== */
@@ -165,8 +168,90 @@ typedef struct t_PositionUnitHis {
     int64_t pnl;                        /**< 平仓盈亏（扩大一万倍） */
     int32_t contract_multiply;          /**< 合约乘数 */
     int32_t hedge_flag;                /**< 投机套保标识 */
+    int64_t worst_price;               /**< 持仓期间最差价格（扩大一万倍）：多头为最低价，空头为最高价，平仓时从持仓沿用 */
+    int64_t last_price;                /**< 最后行情价（扩大一万倍），平仓时从持仓沿用 */
+    int32_t frozen;                    /**< 冻结标识，已平仓恒为 0（结构对称保留） */
 } PositionUnitHis;
 
+/* ========== 持仓记录聚合结构体（PositionWithOrder） ========== */
+/** 由 PositionUnit / PositionUnitHis 按 (open_order_id, close_order_id) 二元组聚合而成；
+ *  仅策略级；非持久化，查询时即时聚合产出。未平部分取自 position_unit，已平取自 position_unit_his。 */
+typedef struct t_PositionWithOrder {
+    char run_id[LEN_ID];               /**< 实例ID（主键） */
+    char account_id[LEN_ACCOUNT_ID];   /**< 账户ID（主键） */
+    int32_t account_type;              /**< 账户类型（主键） */
+    char strategy_id[LEN_CODE];        /**< 策略ID（主键） */
+    char open_order_id[LEN_ID];        /**< 开仓指令的 order_id（主键） */
+    char close_order_id[LEN_ID];       /**< 平仓指令的 order_id（主键） */
+    int32_t market;                    /**< 标的物市场 */
+    char code[LEN_CODE];               /**< 标的代码或合约代码 */
+    char product[LEN_PRODUCT];         /**< 品种，期货、期权特有 */
+    int32_t side;                      /**< 方向：多/空，取 PositionSide 枚举值 */
+    int32_t volume;                    /**< 匹配的持仓数量（手数） */
+    int64_t hold_cost;                 /**< 持仓成本（扩大一万倍）：初始时为开仓价格；未平仓则日切后更新为上一日结算价/最新价 */
+    int32_t avail_volume;              /**< 可用持仓数量（手数） */
+    int32_t frozen_volume;             /**< 冻结持仓数量（手数） */
+    int32_t is_combination;            /**< 是否组合开仓，0=否，1=是（郑商所平仓匹配时先平单腿再平组合） */
+    int32_t position_type;             /**< 持仓类型：1=今投机仓，2=昨投机仓，3=今套保仓，4=昨套保仓，5=普通现货持仓 */
+    int32_t open_day;                  /**< 开仓日期（开仓的实际归属日期，非实际日期），格式 YYYYMMDD */
+    int32_t open_time;                 /**< 开仓时间，格式 HHmmSSsss（毫秒） */
+    int64_t open_price;                /**< 开仓价格（扩大一万倍） */
+    int32_t open_volume;               /**< open_order_id 对应的开仓数量（手数） */
+    int32_t margin_ratio;              /**< 保证金率（扩大一万倍） */
+    int64_t margin;                    /**< 保证金（扩大一万倍） */
+    int32_t close_day;                 /**< 平仓日期（平仓的实际归属日期，非实际日期），格式 YYYYMMDD */
+    int32_t close_time;                /**< 平仓时间，格式 HHmmSSsss（毫秒） */
+    int64_t close_price;               /**< 平仓价格（扩大一万倍）：当日未平仓时期货填结算价、现货填最新价 */
+    int32_t close_volume;              /**< close_order_id 对应委托的平仓数量（手数） */
+    int64_t price_tick;                /**< 最小价格单位（扩大一万倍） */
+    int64_t basepoint;                 /**< 盈亏基点（扩大一万倍，已扣除手续费）：保本价 */
+    int32_t isclosed;                  /**< 是否已平仓，0=未平仓，1=普通平仓，2=组合/特殊平仓 */
+    int64_t fee;                       /**< 开平仓总费用（扩大一万倍）= 开仓费用 + 平仓费用 */
+    int32_t allots;                    /**< 配送信息：1=配股，2=送股/转赠 */
+    int32_t contract_multiply;         /**< 合约乘数 */
+    int64_t worst_price;               /**< 仓位持有期间的最坏价格（扩大一万倍）：多头填期间最低价，空头填期间最高价，用于最大回撤计算 */
+    int32_t oper_date;                 /**< 归属日 YYYYMMDD：读 position_his 快照时填该日；实时聚合/未持久化时为 0 */
+} PositionWithOrder;
+
+/* ========== 账户级持仓记录聚合结构体（AccountPositionWithOrder） ========== */
+/** 由 AccountPositionUnit / AccountPositionUnitHis 按 (open_order_id, close_order_id) 聚合而成；
+ *  账户级（无 strategy_id，跨策略汇总），支持组合（combination）；非持久化即时聚合产出。 */
+typedef struct t_AccountPositionWithOrder {
+    char run_id[LEN_ID];               /**< 实例ID（主键） */
+    char account_id[LEN_ACCOUNT_ID];   /**< 账户ID（主键） */
+    int32_t account_type;              /**< 账户类型（主键） */
+    char open_order_id[LEN_ID];        /**< 开仓指令的 order_id（主键） */
+    char close_order_id[LEN_ID];       /**< 平仓指令的 order_id（主键） */
+    int32_t market;                    /**< 标的物市场 */
+    char code[LEN_CODE];               /**< 标的代码或合约代码 */
+    char product[LEN_PRODUCT];         /**< 品种，期货、期权特有 */
+    int32_t side;                      /**< 方向：多/空，取 PositionSide 枚举值 */
+    int32_t volume;                    /**< 匹配的持仓数量（手数） */
+    int64_t hold_cost;                 /**< 持仓成本（扩大一万倍） */
+    int32_t avail_volume;              /**< 可用持仓数量（手数） */
+    int32_t frozen_volume;             /**< 冻结持仓数量（手数） */
+    int32_t is_combination;            /**< 是否组合开仓，0=否，1=是（组内任一手参与组合即 1） */
+    int64_t combination_id;            /**< 组合ID，0=未参与组合；非0=关联 CombinationUnit.id（组内首个非0值） */
+    int32_t position_type;             /**< 持仓类型：1=今投机，2=昨投机，3=今套保，4=昨套保，5=普通现货 */
+    int32_t open_day;                  /**< 开仓归属日期 YYYYMMDD */
+    int32_t open_time;                 /**< 开仓时间 HHmmSSsss（毫秒） */
+    int64_t open_price;                /**< 开仓价格（扩大一万倍） */
+    int32_t open_volume;               /**< open_order_id 对应的开仓数量（手数） */
+    int32_t margin_ratio;              /**< 保证金率（扩大一万倍） */
+    int64_t margin;                    /**< 保证金（扩大一万倍） */
+    int32_t close_day;                 /**< 平仓归属日期 YYYYMMDD */
+    int32_t close_time;                /**< 平仓时间 HHmmSSsss（毫秒） */
+    int64_t close_price;               /**< 平仓价格（扩大一万倍）；未平仓填结算价/最新价 */
+    int32_t close_volume;              /**< close_order_id 对应委托的平仓数量（手数） */
+    int64_t price_tick;                /**< 最小价格单位（扩大一万倍） */
+    int64_t basepoint;                 /**< 盈亏基点（扩大一万倍，已扣手续费）：保本价 */
+    int32_t isclosed;                  /**< 是否已平仓，0=未平仓，1=普通平仓，2=组合/特殊平仓 */
+    int64_t fee;                       /**< 开平仓总费用（扩大一万倍） */
+    int32_t allots;                    /**< 配送信息：1=配股，2=送股/转赠 */
+    int32_t contract_multiply;         /**< 合约乘数 */
+    int64_t worst_price;               /**< 持有期间最坏价格（扩大一万倍）：多头最低、空头最高 */
+    int32_t oper_date;                 /**< 归属日 YYYYMMDD：读 account_position_his 快照时填该日；实时聚合/未持久化时为 0 */
+} AccountPositionWithOrder;
 
 /* ========== 费率模块：合并结构体（手续费率 + 合约/保证金参数） ========== */
 /** 一个 code 一条记录，一次查询取齐费率与保证金，避免查两次；仅内存存储，不持久化；C 风格 */
@@ -297,6 +382,9 @@ typedef struct t_AccountPositionUnit {
     int32_t contract_multiply;          /**< 合约乘数，开仓时写入，之后不变 */
     int32_t hedge_flag;                /**< 投机套保标识，1=投机/2=套保/3=套利，开仓时从 OmOrder 复制 */
     int64_t combination_id;             /**< 组合ID，0表示未参与组合；非0表示来自组合委托拆腿或保证金优惠申请，值为关联 CombinationUnit.id */
+    int64_t worst_price;                /**< 持仓期间最差价格（扩大一万倍）：多头为最低价，空头为最高价；仅未平仓时更新，已平仓沿用最后一次值 */
+    int64_t last_price;                 /**< 最后行情价（扩大一万倍）：仅未平仓时更新，已平仓保留当时值 */
+    int32_t frozen;                     /**< 是否被平仓委托冻结：0=未冻结，1=冻结；仅未平仓行有意义 */
 } AccountPositionUnit;
 
 /* ========== 账户级批量平仓参数结构体 ========== */
@@ -334,6 +422,9 @@ typedef struct t_AccountPositionUnitHis {
     int32_t contract_multiply;          /**< 合约乘数 */
     int32_t hedge_flag;                /**< 投机套保标识 */
     int64_t combination_id;             /**< 组合ID，0表示未参与组合 */
+    int64_t worst_price;                /**< 持仓期间最差价格（扩大一万倍）：多头为最低价，空头为最高价，平仓时从持仓沿用 */
+    int64_t last_price;                 /**< 最后行情价（扩大一万倍），平仓时从持仓沿用 */
+    int32_t frozen;                     /**< 冻结标识，已平仓恒为 0（结构对称保留） */
 } AccountPositionUnitHis;
 
 /** 组合持仓单元，用于组合持仓的查询和统计，组合只在账户级拥有 */
