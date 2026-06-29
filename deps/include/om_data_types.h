@@ -177,15 +177,15 @@ typedef struct t_PositionUnitHis {
 /** 由 PositionUnit / PositionUnitHis 按 (open_order_id, close_order_id) 二元组聚合而成；
  *  仅策略级；非持久化，查询时即时聚合产出。未平部分取自 position_unit，已平取自 position_unit_his。 */
 typedef struct t_PositionWithOrder {
-    char run_id[LEN_ID];               /**< 实例ID（主键） */
-    char account_id[LEN_ACCOUNT_ID];   /**< 账户ID（主键） */
+    char run_id[OM_LEN_ID];               /**< 实例ID（主键） */
+    char account_id[OM_LEN_ACCOUNT_ID];   /**< 账户ID（主键） */
     int32_t account_type;              /**< 账户类型（主键） */
-    char strategy_id[LEN_CODE];        /**< 策略ID（主键） */
-    char open_order_id[LEN_ID];        /**< 开仓指令的 order_id（主键） */
-    char close_order_id[LEN_ID];       /**< 平仓指令的 order_id（主键） */
+    char strategy_id[OM_LEN_CODE];        /**< 策略ID（主键） */
+    char open_order_id[OM_LEN_ID];        /**< 开仓指令的 order_id（主键） */
+    char close_order_id[OM_LEN_ID];       /**< 平仓指令的 order_id（主键） */
     int32_t market;                    /**< 标的物市场 */
-    char code[LEN_CODE];               /**< 标的代码或合约代码 */
-    char product[LEN_PRODUCT];         /**< 品种，期货、期权特有 */
+    char code[OM_LEN_CODE];               /**< 标的代码或合约代码 */
+    char product[OM_LEN_PRODUCT];         /**< 品种，期货、期权特有 */
     int32_t side;                      /**< 方向：多/空，取 PositionSide 枚举值 */
     int32_t volume;                    /**< 匹配的持仓数量（手数） */
     int64_t hold_cost;                 /**< 持仓成本（扩大一万倍）：初始时为开仓价格；未平仓则日切后更新为上一日结算价/最新价 */
@@ -217,14 +217,14 @@ typedef struct t_PositionWithOrder {
 /** 由 AccountPositionUnit / AccountPositionUnitHis 按 (open_order_id, close_order_id) 聚合而成；
  *  账户级（无 strategy_id，跨策略汇总），支持组合（combination）；非持久化即时聚合产出。 */
 typedef struct t_AccountPositionWithOrder {
-    char run_id[LEN_ID];               /**< 实例ID（主键） */
-    char account_id[LEN_ACCOUNT_ID];   /**< 账户ID（主键） */
+    char run_id[OM_LEN_ID];               /**< 实例ID（主键） */
+    char account_id[OM_LEN_ACCOUNT_ID];   /**< 账户ID（主键） */
     int32_t account_type;              /**< 账户类型（主键） */
-    char open_order_id[LEN_ID];        /**< 开仓指令的 order_id（主键） */
-    char close_order_id[LEN_ID];       /**< 平仓指令的 order_id（主键） */
+    char open_order_id[OM_LEN_ID];        /**< 开仓指令的 order_id（主键） */
+    char close_order_id[OM_LEN_ID];       /**< 平仓指令的 order_id（主键） */
     int32_t market;                    /**< 标的物市场 */
-    char code[LEN_CODE];               /**< 标的代码或合约代码 */
-    char product[LEN_PRODUCT];         /**< 品种，期货、期权特有 */
+    char code[OM_LEN_CODE];               /**< 标的代码或合约代码 */
+    char product[OM_LEN_PRODUCT];         /**< 品种，期货、期权特有 */
     int32_t side;                      /**< 方向：多/空，取 PositionSide 枚举值 */
     int32_t volume;                    /**< 匹配的持仓数量（手数） */
     int64_t hold_cost;                 /**< 持仓成本（扩大一万倍） */
